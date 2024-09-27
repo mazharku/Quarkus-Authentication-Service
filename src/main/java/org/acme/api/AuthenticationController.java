@@ -5,6 +5,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.acme.model.dto.*;
+import org.acme.service.AuthService;
 import org.acme.service.UserService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -18,9 +19,11 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 )
 public class AuthenticationController {
      private final UserService userService;
+     private final AuthService authService;
 
-    public AuthenticationController(UserService userService) {
+    public AuthenticationController(UserService userService, AuthService authService) {
         this.userService = userService;
+        this.authService = authService;
     }
 
     @Path("register")
@@ -43,7 +46,8 @@ public class AuthenticationController {
     @PermitAll
     @POST
     public Response login(UserLogInRequest logInRequest) {
-        return Response.ok("").build();
+        AuthResponse authResponse = authService.login(logInRequest);
+        return Response.ok(authResponse).build();
     }
 
     @Path("forget-password")
