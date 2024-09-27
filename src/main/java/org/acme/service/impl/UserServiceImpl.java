@@ -9,23 +9,13 @@ import org.acme.model.entities.User;
 import org.acme.service.UserService;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserBasicInfoResponse> userInfos() {
-        List<User> users = User.listAll();
-        return  users.stream()
-                .map(e-> {
-                    UserBasicInfoResponse infoResponse = new UserBasicInfoResponse();
-                    infoResponse.fullName = e.firstName+" "+e.lastName;
-                    infoResponse.email = e.email;
-                    infoResponse.roleName = e.roles.stream().map(e1-> e1.name).collect(Collectors.joining());
-                    return infoResponse;
-                }).toList();
+        return User.getUsersBasicInfo();
     }
 
     @Override
@@ -42,7 +32,7 @@ public class UserServiceImpl implements UserService {
         user.email = userResponse.email;
         user.isActive = true;
         user.password = userResponse.password;
-        user.roles = Set.of(role);
+        //user.roles = Set.of(role);
         user.persist();
     }
 
