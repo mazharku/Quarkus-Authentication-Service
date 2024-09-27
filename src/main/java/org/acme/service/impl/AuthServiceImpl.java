@@ -26,7 +26,7 @@ public class AuthServiceImpl implements AuthService {
         if(!verifyPassword) {
             throw new SecurityException("Wrong Password");
         }
-        String generateToken = jwtService.generateToken(user.firstName, user.roles.stream().map(e -> e.name).toList());
+        String generateToken = jwtService.generateToken(user.email, user.roles.stream().map(e -> e.name).toList());
         return  new AuthResponse(generateToken);
     }
 }

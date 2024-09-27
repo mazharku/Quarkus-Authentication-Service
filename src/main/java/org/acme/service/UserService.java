@@ -15,4 +15,6 @@ public interface UserService {
     void deactivateUser(String email);
 
     void activateUser(String email);
+
+    boolean isUserValid(String username);
 }

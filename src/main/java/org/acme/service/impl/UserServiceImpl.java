@@ -69,4 +69,10 @@ public class UserServiceImpl implements UserService {
         user.persist();
     }
 
+    @Override
+    @Transactional
+    public boolean isUserValid(String username) {
+        return User.findByEmail(username)!=null;
+    }
+
 }
