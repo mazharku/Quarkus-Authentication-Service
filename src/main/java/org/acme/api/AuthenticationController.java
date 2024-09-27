@@ -4,10 +4,8 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.acme.model.dto.PasswordResetRequest;
-import org.acme.model.dto.ResetPasswordRequest;
-import org.acme.model.dto.UserLogInRequest;
-import org.acme.model.dto.UserRequest;
+import org.acme.model.dto.*;
+import org.acme.service.UserService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
@@ -19,6 +17,11 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
         description = "*Endpoints for managing user Authentication*"
 )
 public class AuthenticationController {
+     private final UserService userService;
+
+    public AuthenticationController(UserService userService) {
+        this.userService = userService;
+    }
 
     @Path("register")
     @Operation(
@@ -28,7 +31,8 @@ public class AuthenticationController {
     @PermitAll
     @POST
     public Response register(UserRequest userRequest) {
-        return Response.ok("").build();
+        userService.createUser(userRequest);
+        return Response.ok(Message.of("User Registration Complete")).build();
     }
 
     @Path("login")

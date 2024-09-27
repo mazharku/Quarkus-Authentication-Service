@@ -13,7 +13,6 @@ public class User extends PanacheEntity {
     public String firstName;
     public String lastName;
     public String email;
-    @Transient
     public String password;
     public boolean isActive;
     @ManyToMany

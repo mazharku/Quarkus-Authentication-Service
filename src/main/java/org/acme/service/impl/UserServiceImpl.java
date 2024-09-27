@@ -3,6 +3,7 @@ package org.acme.service.impl;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import org.acme.common.exceptions.ResourceNotFound;
+import org.acme.common.util.PasswordUtil;
 import org.acme.model.dto.UserBasicInfoResponse;
 import org.acme.model.dto.UserRequest;
 import org.acme.model.entities.Role;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements UserService {
         user.lastName = userResponse.lastName;
         user.email = userResponse.email;
         user.isActive = true;
-        user.password = userResponse.password;
+        user.password = PasswordUtil.hashPassword(userResponse.password);
         user.roles = Set.of(role);
         user.persist();
     }
