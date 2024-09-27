@@ -2,6 +2,7 @@ package org.acme.service.impl;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
+import org.acme.common.exceptions.ResourceNotFound;
 import org.acme.model.dto.UserBasicInfoResponse;
 import org.acme.model.dto.UserRequest;
 import org.acme.model.entities.Role;
@@ -21,7 +22,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserBasicInfoResponse> userInfos() {
-
         return User.getUsersBasicInfo();
     }
 
@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     public void createUser(UserRequest userResponse) {
         User user = User.findByEmail(userResponse.email);
         if (user != null) {
-            throw new RuntimeException("user already exists!");
+            throw new ResourceNotFound("user already exists!");
         }
         Role role = Role.findByName(userResponse.role);
         user = new User();
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
     public void deactivateUser(String email) {
         User user = User.findByEmail(email);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFound("User not found");
         }
         user.isActive = false;
         user.persist();
@@ -59,10 +59,10 @@ public class UserServiceImpl implements UserService {
     public void activateUser(String email) {
         User user = User.findByEmail(email);
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new ResourceNotFound("User not found");
         }
         if (user.isActive) {
-            throw new RuntimeException("User already active");
+            throw new ResourceNotFound("User already active");
         }
         user.isActive = true;
         user.persist();

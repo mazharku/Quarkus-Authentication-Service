@@ -1,7 +1,6 @@
 package org.acme.model.entities;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import io.quarkus.panache.common.Parameters;
 import jakarta.persistence.*;
 import org.acme.model.dto.UserBasicInfoResponse;
 
