@@ -9,12 +9,19 @@ import org.acme.model.entities.User;
 import org.acme.service.UserService;
 
 import java.util.List;
+import java.util.Set;
 
 @ApplicationScoped
 public class UserServiceImpl implements UserService {
 
     @Override
+    public UserBasicInfoResponse getUserInfoByEmail(String email) {
+        return User.getUserBasicInfoByEmail(email);
+    }
+
+    @Override
     public List<UserBasicInfoResponse> userInfos() {
+
         return User.getUsersBasicInfo();
     }
 
@@ -22,7 +29,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void createUser(UserRequest userResponse) {
         User user = User.findByEmail(userResponse.email);
-        if(user!=null) {
+        if (user != null) {
             throw new RuntimeException("user already exists!");
         }
         Role role = Role.findByName(userResponse.role);
@@ -32,7 +39,32 @@ public class UserServiceImpl implements UserService {
         user.email = userResponse.email;
         user.isActive = true;
         user.password = userResponse.password;
-        //user.roles = Set.of(role);
+        user.roles = Set.of(role);
+        user.persist();
+    }
+
+    @Override
+    @Transactional
+    public void deactivateUser(String email) {
+        User user = User.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        user.isActive = false;
+        user.persist();
+    }
+
+    @Override
+    @Transactional
+    public void activateUser(String email) {
+        User user = User.findByEmail(email);
+        if (user == null) {
+            throw new RuntimeException("User not found");
+        }
+        if (user.isActive) {
+            throw new RuntimeException("User already active");
+        }
+        user.isActive = true;
         user.persist();
     }
 

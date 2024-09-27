@@ -1,14 +1,12 @@
 package org.acme.model.entities;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
-import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.panache.common.Parameters;
 import jakarta.persistence.*;
 import org.acme.model.dto.UserBasicInfoResponse;
 
-import java.util.*;
-import java.util.function.BiFunction;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -35,4 +33,11 @@ public class User extends PanacheEntity {
                 .stream()
                 .toList();
     }
+
+    public static UserBasicInfoResponse getUserBasicInfoByEmail(String email) {
+        return find("isActive = true and email = ?1", email)
+                .project(UserBasicInfoResponse.class)
+                .firstResult();
+    }
+
 }
