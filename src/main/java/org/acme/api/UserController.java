@@ -1,13 +1,12 @@
 package org.acme.api;
 
+import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.acme.model.dto.Message;
-import org.acme.model.dto.UserBasicInfoResponse;
-import org.acme.model.dto.UserRequest;
-import org.acme.model.dto.UserStatusUpdateRequest;
+import org.acme.model.dto.*;
 import org.acme.service.UserService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -36,6 +35,7 @@ public class UserController {
             summary = "User info By Email",
             description = "User info by Email. only active user info will show"
     )
+    @Authenticated
     public Response getUserinfoByEmail(@PathParam("email") String email) {
         UserBasicInfoResponse userBasicInfoResponses = userService.getUserInfoByEmail(email);
         return Response.ok(userBasicInfoResponses).build();
@@ -47,6 +47,7 @@ public class UserController {
             summary = "All user info",
             description = "All user info in pagination list. only active user info will show"
     )
+    @Authenticated
     public Response getAllUserInfoWithPagination() {
         List<UserBasicInfoResponse> userBasicInfoResponses = userService.userInfos();
         return Response.ok(userBasicInfoResponses).build();
@@ -58,6 +59,7 @@ public class UserController {
             summary = "Create user",
             description = "Create a new user. email should be unique"
     )
+    @Authenticated
     public Response createUser(UserRequest userRequest) {
         userService.createUser(userRequest);
         return Response.ok(Message.of("user created successfully!")).build();
@@ -69,6 +71,7 @@ public class UserController {
             summary = "Deactivate User",
             description = "Deactivate a user"
     )
+    @Authenticated
     public Response deActivateUser(UserStatusUpdateRequest request) {
         userService.deactivateUser(request.email);
         return Response.ok(Message.of("Deactivate user successfully")).build();
@@ -80,9 +83,22 @@ public class UserController {
             summary = "Activate User",
             description = "Activate a user"
     )
+    @Authenticated
     public Response activateUser(UserStatusUpdateRequest request) {
         userService.activateUser(request.email);
         return Response.ok(Message.of("Activate user successfully")).build();
     }
+
+    @Path("change-password")
+    @Operation(
+            summary = "Change Password",
+            description = "User info by Email. only active user info will show"
+    )
+    @POST
+    @Authenticated
+    public Response changePassword(ResetPasswordRequest resetPasswordRequest) {
+        return Response.ok("").build();
+    }
+
 
 }
