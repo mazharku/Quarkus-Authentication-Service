@@ -3,12 +3,15 @@ package org.acme.model.entities;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import org.acme.model.dto.UserBasicInfoResponse;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.RelationTargetAuditMode;
 
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@Audited
 public class User extends PanacheEntity {
     public String firstName;
     public String lastName;
@@ -19,6 +22,7 @@ public class User extends PanacheEntity {
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
     public Set<Role> roles;
 
     public static User findByEmail(String email) {
