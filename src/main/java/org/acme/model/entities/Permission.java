@@ -11,4 +11,8 @@ import org.hibernate.annotations.SoftDeleteType;
 @SoftDelete(strategy = SoftDeleteType.ACTIVE, columnName = "deleted")
 public class Permission extends PanacheEntity {
     public String name;
+
+    public static Permission findByName(String name) {
+        return find("name", name).firstResult();
+    }
 }

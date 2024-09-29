@@ -1,15 +1,15 @@
 insert into permissions(id, name, deleted)
-VALUES (1, 'Read', false);
+VALUES (1, 'Read', true);
 insert into permissions(id, name, deleted)
-VALUES (2, 'Write', false);
+VALUES (2, 'Write', true);
 insert into permissions(id, name, deleted)
-VALUES (3, 'Update', false);
+VALUES (3, 'Update', true);
 insert into permissions(id, name, deleted)
-VALUES (4, 'Delete', false);
+VALUES (4, 'Delete', true);
 
 insert into roles (id, name, deleted)
-values (1, 'Admin', false);
+values (1, 'Admin', true);
 insert into roles (id, name, deleted)
-values (2, 'User', false);
+values (2, 'User', true);
 insert into roles (id, name, deleted)
-values (3, 'Manager', false);
+values (3, 'Manager', true);

@@ -8,6 +8,7 @@ import org.hibernate.annotations.SoftDeleteType;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,12 +22,13 @@ public class User extends PanacheEntity {
     public String email;
     public String password;
     public boolean isActive;
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     @JoinTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-    public Set<Role> roles;
+    public Set<Role> roles = new HashSet<>();
+
 
     public static User findByEmail(String email) {
         return find("email", email).firstResult();

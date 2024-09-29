@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
         token.startTime= LocalDateTime.now();
         token.isRevoked=false;
         token.user=user;
-        token.persist();
+       // token.persist();
         return  new AuthResponse(generateToken);
     }
 }
