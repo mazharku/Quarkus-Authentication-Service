@@ -1,7 +1,10 @@
 package org.acme.api;
 
+import io.quarkus.security.Authenticated;
+import io.vertx.mutiny.core.http.HttpServerRequest;
 import jakarta.annotation.security.PermitAll;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.acme.model.dto.*;
@@ -58,7 +61,8 @@ public class AuthenticationController {
     @PermitAll
     @POST
     public Response forgotPassword(PasswordResetRequest passwordResetRequest) {
-        return Response.ok("").build();
+        authService.forgotPassword(passwordResetRequest);
+        return Response.ok(Message.of("reset token send")).build();
     }
 
     @Path("reset-password/{token}")
@@ -69,7 +73,20 @@ public class AuthenticationController {
     @PermitAll
     @POST
     public Response resetPassword(ResetPasswordRequest resetPasswordRequest,@PathParam("token") String token) {
-        return Response.ok("").build();
+        authService.resetPassword(resetPasswordRequest,token);
+        return Response.ok(Message.of("reset password successfully")).build();
+    }
+
+    @Path("logout")
+    @Operation(
+            summary = "User logout",
+            description = "User logout"
+    )
+    @Authenticated
+    @POST
+    public Response logout(@Context HttpServerRequest serverRequest) {
+        authService.logout(serverRequest);
+        return Response.ok(Message.of("Logout successfully")).build();
     }
 
 }
