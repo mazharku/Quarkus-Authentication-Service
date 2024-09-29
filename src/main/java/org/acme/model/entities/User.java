@@ -3,6 +3,8 @@ package org.acme.model.entities;
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
 import jakarta.persistence.*;
 import org.acme.model.dto.UserBasicInfoResponse;
+import org.hibernate.annotations.SoftDelete;
+import org.hibernate.annotations.SoftDeleteType;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
@@ -12,6 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Audited
+@SoftDelete(strategy= SoftDeleteType.ACTIVE, columnName = "deleted")
 public class User extends PanacheEntity {
     public String firstName;
     public String lastName;
