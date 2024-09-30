@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "token")
 public class Token extends PanacheEntity {
+
+    @Column(name = "value", columnDefinition = "text")
     public String value;
 
     public LocalDateTime startTime;

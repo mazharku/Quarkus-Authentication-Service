@@ -10,6 +10,8 @@ import io.smallrye.jwt.auth.principal.ParseException;
 import io.smallrye.mutiny.Uni;
 import jakarta.annotation.Priority;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.transaction.Transactional;
+import org.acme.model.entities.Token;
 import org.acme.service.UserService;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -46,11 +48,19 @@ public class JwtIdentityProvider implements IdentityProvider<TokenAuthentication
                 return Uni.createFrom().nullItem();
             }
             return requestContext.runBlocking(() -> {
-                if (userService.isUserValid(jwt.getName())) {
-                    return new JwtSecurityIdentity(jwt, jwt.getName());
+                if (isTokenValid(token)) {
+                    if (userService.isUserValid(jwt.getName())) {
+                        return new JwtSecurityIdentity(jwt, jwt.getName());
+                    }
                 }
                 return null;
             });
         });
+    }
+
+    @Transactional
+    public boolean isTokenValid(String token) {
+        Token existenceToken = Token.findByToken(token);
+        return existenceToken != null;
     }
 }

@@ -2,6 +2,7 @@ package org.acme.api;
 
 import io.quarkus.security.Authenticated;
 import io.vertx.core.http.HttpServerRequest;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.MediaType;
@@ -21,7 +22,7 @@ import java.util.List;
         description = "*Endpoints for managing Access Control*"
 )
 public class AccessControlController {
-   private final AccessControl accessControl;
+    private final AccessControl accessControl;
 
     public AccessControlController(AccessControl accessControl) {
         this.accessControl = accessControl;
@@ -33,7 +34,7 @@ public class AccessControlController {
             description = ""
     )
     @POST
-    @Authenticated
+    @RolesAllowed("Admin")
     public Response addRoleToUser(UserRoleRequest userRoleRequest) {
         accessControl.addRoleToUser(userRoleRequest);
         return Response.ok(Message.of("Role is added to the user")).build();
@@ -45,7 +46,7 @@ public class AccessControlController {
             description = ""
     )
     @DELETE
-    @Authenticated
+    @RolesAllowed("Admin")
     public Response removeRoleFromUser(UserRoleRequest userRoleRequest) {
         accessControl.removeRoleFromUser(userRoleRequest);
         return Response.ok(Message.of("Role is removed from the user")).build();
@@ -57,7 +58,7 @@ public class AccessControlController {
             description = ""
     )
     @GET
-    @Authenticated
+    @RolesAllowed("Admin")
     public Response getUserRoles(@PathParam("user_id") Integer userId) {
         UserRoleResponse response = accessControl.getUserRoles(userId);
         return Response.ok(response).build();
@@ -81,7 +82,7 @@ public class AccessControlController {
             description = ""
     )
     @POST
-    @Authenticated
+    @RolesAllowed("Admin")
     public Response addPermissionToRole(RolePermissionRequest rolePermissionRequest) {
         accessControl.addPermissionToRole(rolePermissionRequest);
         return Response.ok(Message.of("Permission is added to the Role")).build();
@@ -93,7 +94,7 @@ public class AccessControlController {
             description = ""
     )
     @DELETE
-    @Authenticated
+    @RolesAllowed("Admin")
     public Response removePermissionFromRole(RolePermissionRequest rolePermissionRequest) {
         accessControl.removePermissionFromRole(rolePermissionRequest);
         return Response.ok(Message.of("Permission is removed from the Role")).build();
@@ -105,7 +106,7 @@ public class AccessControlController {
             description = ""
     )
     @GET
-    @Authenticated
+    @RolesAllowed("Admin")
     public Response getRolePermissions(@PathParam("role_name") String roleName) {
         RolePermissionResponse response = accessControl.getRolePermissions(roleName);
         return Response.ok(response).build();
@@ -120,7 +121,7 @@ public class AccessControlController {
     @GET
     @Authenticated
     public Response getCurrentUserPermissions(@Context HttpServerRequest request) {
-        List<RolePermissionResponse> response= accessControl.getCurrentUserPermissions(request);
+        List<RolePermissionResponse> response = accessControl.getCurrentUserPermissions(request);
         return Response.ok(response).build();
     }
 }
