@@ -29,12 +29,11 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void createUser(UserRequest userResponse) {
-        User user = User.findByEmail(userResponse.email);
-        if (user != null) {
+        if (User.findByEmail(userResponse.email) != null) {
             throw new ResourceNotFound("user already exists!");
         }
         Role role = Role.findByName(userResponse.role);
-        user = new User();
+        User user = new User();
         user.firstName = userResponse.firstName;
         user.lastName = userResponse.lastName;
         user.email = userResponse.email;
